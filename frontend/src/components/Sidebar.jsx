@@ -9,7 +9,7 @@ import {
   Radio
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, isConnected }) {
+export default function Sidebar({ activeTab, setActiveTab, isConnected, isApiHealthy }) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Activity },
     { id: 'staff', label: 'Staff Management', icon: Users },
@@ -17,6 +17,20 @@ export default function Sidebar({ activeTab, setActiveTab, isConnected }) {
     { id: 'events', label: 'Access Events', icon: Clock },
     { id: 'devices', label: 'Device Health', icon: Cpu }
   ];
+
+  let statusLabel = 'Reconnecting...';
+  let dotClass = 'offline';
+
+  if (isConnected) {
+    statusLabel = 'Gateway Connected (Live)';
+    dotClass = '';
+  } else if (isApiHealthy) {
+    statusLabel = 'API Connected (Auto-Sync)';
+    dotClass = 'syncing';
+  } else {
+    statusLabel = 'Backend Offline';
+    dotClass = 'offline';
+  }
 
   return (
     <aside className="sidebar">
@@ -50,8 +64,8 @@ export default function Sidebar({ activeTab, setActiveTab, isConnected }) {
 
       <div className="sidebar-footer">
         <div className="connection-indicator">
-          <span className={`pulse-dot ${isConnected ? '' : 'offline'}`} />
-          <span>{isConnected ? 'Gateway Connected (Live)' : 'Reconnecting...'}</span>
+          <span className={`pulse-dot ${dotClass}`} />
+          <span>{statusLabel}</span>
         </div>
         <div style={{ marginTop: '8px', fontSize: '0.72rem', color: '#64748b' }}>
           Module 1: Staff RFID & Bed-Zone

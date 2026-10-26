@@ -12,6 +12,7 @@ import { initSocket, subscribeToEvent } from './api/socket';
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isConnected, setIsConnected] = useState(false);
+  const [isApiHealthy, setIsApiHealthy] = useState(false);
   const [backendError, setBackendError] = useState(null);
 
   // Core Data State
@@ -40,9 +41,11 @@ export default function App() {
       setBeds(bedsRes.data || []);
       setRecentEvents(eventsRes.data || []);
       setBackendError(null);
+      setIsApiHealthy(true);
     } catch (err) {
       console.error('[App] Failed to fetch initial dashboard data:', err);
       setBackendError('Backend unavailable. Please check that the backend service is running.');
+      setIsApiHealthy(false);
     }
   }, [wardFilter]);
 
@@ -111,6 +114,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         isConnected={isConnected}
+        isApiHealthy={isApiHealthy}
       />
 
       <main className="main-content">
