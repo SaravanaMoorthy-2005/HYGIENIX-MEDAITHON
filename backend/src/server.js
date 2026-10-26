@@ -38,8 +38,8 @@ try {
   console.warn('[Bootstrap] Check seed warning:', e.message);
 }
 
-// Healthcheck
-app.get('/health', (req, res) => {
+// Healthcheck (available at /health locally and /api/health through Vercel rewrites)
+app.get(['/health', '/api/health'], (req, res) => {
   res.json({
     status: 'ONLINE',
     service: 'Smart Hand-Hygiene Monitoring System - Module 1',
@@ -73,4 +73,7 @@ if (require.main === module) {
   });
 }
 
-module.exports = { app, server };
+// Export Express app instance directly for Vercel, attaching app and server properties for backward compatibility
+app.app = app;
+app.server = server;
+module.exports = app;

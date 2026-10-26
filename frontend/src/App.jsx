@@ -42,7 +42,7 @@ export default function App() {
       setBackendError(null);
     } catch (err) {
       console.error('[App] Failed to fetch initial dashboard data:', err);
-      setBackendError('Backend unavailable. Ensure the Express server is running on port 5000.');
+      setBackendError('Backend unavailable. Please check that the backend service is running.');
     }
   }, [wardFilter]);
 

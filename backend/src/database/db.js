@@ -9,6 +9,19 @@ if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
 
+// In serverless environments (like Vercel), copy repository template DB to writable directory if missing
+if (process.env.VERCEL && !fs.existsSync(config.dbPath)) {
+  const templateDbPath = path.resolve(__dirname, '../../data/hand_hygiene.db');
+  if (fs.existsSync(templateDbPath)) {
+    try {
+      fs.copyFileSync(templateDbPath, config.dbPath);
+      console.log(`[Database] Initialized serverless DB from template at: ${templateDbPath}`);
+    } catch (copyErr) {
+      console.warn('[Database] Failed to copy template DB:', copyErr.message);
+    }
+  }
+}
+
 let db;
 try {
   db = new Database(config.dbPath, {

@@ -6,10 +6,18 @@ const listeners = new Map();
 export function initSocket(onStatusChange) {
   if (socket) return socket;
 
-  socket = io('/', {
+  const socketUrl = import.meta.env?.VITE_SOCKET_URL;
+  if (!socketUrl && import.meta.env?.PROD) {
+    // In serverless production environments without a dedicated WebSocket server,
+    // signal disconnected so the application runs its built-in polling fallback.
+    if (onStatusChange) onStatusChange(false);
+    return null;
+  }
+
+  socket = io(socketUrl || '/', {
     transports: ['websocket', 'polling'],
-    reconnectionAttempts: 20,
-    reconnectionDelay: 1000
+    reconnectionAttempts: 10,
+    reconnectionDelay: 2000
   });
 
   socket.on('connect', () => {
@@ -32,10 +40,11 @@ export function initSocket(onStatusChange) {
 
 export function subscribeToEvent(eventName, callback) {
   if (!socket) initSocket();
+  if (!socket) return () => {};
   socket.on(eventName, callback);
 
   return () => {
-    socket.off(eventName, callback);
+    if (socket) socket.off(eventName, callback);
   };
 }
 
