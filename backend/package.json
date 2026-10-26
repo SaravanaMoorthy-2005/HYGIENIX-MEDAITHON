@@ -1,0 +1,19 @@
+{
+  "name": "smart-hand-hygiene-backend",
+  "version": "1.0.0",
+  "description": "Module 1: Staff Identification & Bed-Zone Access Backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node src/database/seed.js",
+    "test": "node tests/api.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.8.1"
+  }
+}
